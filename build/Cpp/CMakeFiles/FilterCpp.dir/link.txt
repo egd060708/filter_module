@@ -1,0 +1,2 @@
+D:\usefulTools\MinGW\mingw64\bin\ar.exe qc libFilterCpp.a CMakeFiles/FilterCpp.dir/source/filters.cpp.obj
+D:\usefulTools\MinGW\mingw64\bin\ranlib.exe libFilterCpp.a
