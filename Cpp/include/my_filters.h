@@ -16,8 +16,8 @@
  * All rights reserved.</center></h2>
  ******************************************************************************
  */
-#ifndef _FILTER_H
-#define _FILTER_H
+#ifndef _MY_FILTER_H
+#define _MY_FILTER_H
 
 /* Includes ------------------------------------------------------------------*/
 #ifdef __cplusplus
@@ -34,25 +34,25 @@ public:
   /**
     @brief trust (0,1)
    */
-  LowPassFilter(float trust = 1) :
+  LowPassFilter(double trust = 1) :
     Trust(trust)
   {
     now_num = 0;
     last_out = 0;
   }
   ~LowPassFilter(){};
-  float Trust;
-  void operator<<(const float&);
-  void operator>>(float&);
-  float f(float num);
+  double Trust;
+  void operator<<(const double&);
+  void operator>>(double&);
+  double f(double num);
 
 protected:
-  void in(float num);
-  float out();
+  void in(double num);
+  double out();
 
 private:
-  float now_num;
-  float last_out;
+  double now_num;
+  double last_out;
 };
 
 /* MedianFilter	*/
@@ -70,22 +70,22 @@ public:
     where_num = 0;
   }
   ~MedianFilter(){};
-  void operator>>(float& num)
+  void operator>>(double& num)
   {
     num = out();
   }
-  void operator<<(const float& num)
+  void operator<<(const double& num)
   {
     in(num);
   }
-  float f(float num)
+  double f(double num)
   {
     in(num);
     return (out());
   }
 
 protected:
-  void in(float num)
+  void in(double num)
   {
     now_num = num;
     /* flag=Length然后递减保证宽度内都是有效波值 */
@@ -94,7 +94,7 @@ protected:
     where_num %= Length;
   }
 
-  float out()
+  double out()
   {
     if (flag > 0)
       return now_num;
@@ -108,9 +108,9 @@ protected:
   }
 
 private:
-  float buffer_num[Length];
-  float sort_num[Length];
-  float now_num;
+  double buffer_num[Length];
+  double sort_num[Length];
+  double now_num;
   int flag, where_num;
 };
 
@@ -131,22 +131,22 @@ public:
     sum = 0;
   }
   ~MeanFilter(){};
-  void operator>>(float& num)
+  void operator>>(double& num)
   {
     num = out();
   }
-  void operator<<(const float& num)
+  void operator<<(const double& num)
   {
     in(num);
   }
-  float f(float num)
+  double f(double num)
   {
     in(num);
     return (out());
   }
 
 protected:
-  void in(float num)
+  void in(double num)
   {
     now_num = num;
     sum -= buffer_num[where_num]; /*<! sum减去旧值 */
@@ -156,7 +156,7 @@ protected:
     where_num %= Length;
   }
 
-  float out()
+  double out()
   {
     if (flag > 0)
       return now_num;
@@ -165,9 +165,9 @@ protected:
   }
 
 private:
-  float buffer_num[Length];
-  float now_num;
-  float sum; /*<! 宽度和数字和 */
+  double buffer_num[Length];
+  double now_num;
+  double sum; /*<! 宽度和数字和 */
   int flag, where_num;
 };
 
@@ -182,10 +182,10 @@ namespace SRML_Filter
     class filter_base
     {
     protected:
-        float a[order + 1];
-        float b[order + 1];
-        float x[order + 1] = {};
-        float y[order + 1] = {};
+        double a[order + 1];
+        double b[order + 1];
+        double x[order + 1] = {};
+        double y[order + 1] = {};
 
     public:
         filter_base(/* args */)
@@ -197,9 +197,9 @@ namespace SRML_Filter
          * @brief 滤波函数
          *
          * @param x0 输入信号
-         * @return float 输出信号
+         * @return double 输出信号
          */
-        float f(float x0)
+        double f(double x0)
         {
             x[0] = x0;
             y[0] = b[0] * x[0];
@@ -230,10 +230,10 @@ namespace SRML_Filter
         }
     };
 
-    inline void cal1stOrderLPFCoeffs(float cutoff_freq, float sampling_freq, float _zeta, float a[2], float b[2])
+    inline void cal1stOrderLPFCoeffs(double cutoff_freq, double sampling_freq, double _zeta, double a[2], double b[2])
     {
-        float wd = tanf(M_PI * cutoff_freq / (sampling_freq));
-        float temp = wd + 1;
+        double wd = tanf(M_PI * cutoff_freq / (sampling_freq));
+        double temp = wd + 1;
 
         b[1] = b[0] = wd / temp;
 
@@ -241,11 +241,11 @@ namespace SRML_Filter
         a[1] = (wd - 1) / temp;
     }
 
-    inline void cal2ndOrderLPFCoeffs(float cutoff_freq, float sampling_freq, float _zeta, float a[3], float b[3])
+    inline void cal2ndOrderLPFCoeffs(double cutoff_freq, double sampling_freq, double _zeta, double a[3], double b[3])
     {
-        float wd = tanf(M_PI * cutoff_freq / (sampling_freq));
-        float temp = 2 * _zeta * wd;
-        float wd2 = wd * wd;
+        double wd = tanf(M_PI * cutoff_freq / (sampling_freq));
+        double temp = 2 * _zeta * wd;
+        double wd2 = wd * wd;
 
         b[2] = b[0] = wd2 / (wd2 + temp + 1.f);
         b[1] = 2.f * b[0];
@@ -255,13 +255,13 @@ namespace SRML_Filter
         a[2] = (wd2 - temp + 1.f) / (wd2 + temp + 1.f);
     }
 
-    inline void cal3rdOrderLPFCoeffs(float cutoff_freq, float sampling_freq, float _zeta, float* a, float* b)
+    inline void cal3rdOrderLPFCoeffs(double cutoff_freq, double sampling_freq, double _zeta, double* a, double* b)
     {
         // 计算一阶低通的系数
-        float a1[2], b1[2];
+        double a1[2], b1[2];
         cal1stOrderLPFCoeffs(cutoff_freq, sampling_freq, _zeta, a1, b1);
         // 计算二阶低通的系数
-        float a2[3], b2[3];
+        double a2[3], b2[3];
         cal2ndOrderLPFCoeffs(cutoff_freq, sampling_freq, _zeta, a2, b2);
         // 计算三阶低通的系数
         b[0] = b1[0] * b2[0];
@@ -275,11 +275,11 @@ namespace SRML_Filter
         a[3] = a1[1] * a2[2];
     }
 
-    inline void cal2ndOrderHPFCoeffs(float cutoff_freq, float sampling_freq, float _zeta, float a[3], float b[3])
+    inline void cal2ndOrderHPFCoeffs(double cutoff_freq, double sampling_freq, double _zeta, double a[3], double b[3])
     {
-        float wd = tanf(M_PI * cutoff_freq / (sampling_freq));
-        float temp = 2 * _zeta * wd;
-        float wd2 = wd * wd;
+        double wd = tanf(M_PI * cutoff_freq / (sampling_freq));
+        double temp = 2 * _zeta * wd;
+        double wd2 = wd * wd;
 
         b[2] = b[0] = (1) / (wd2 + temp + 1.f);
         b[1] = -2.f * b[0];
@@ -289,16 +289,16 @@ namespace SRML_Filter
         a[2] = (wd2 - temp + 1.f) / (wd2 + temp + 1.f);
     }
 
-    inline void cal2ndOrderBSFCoeffs(float stop_freq, float sampling_freq, float depth, float width, float a[3], float b[3])
+    inline void cal2ndOrderBSFCoeffs(double stop_freq, double sampling_freq, double depth, double width, double a[3], double b[3])
     {
-        float wd = tanf(M_PI * stop_freq / (sampling_freq));
-        float wd2 = wd * wd;
-        float wc = 2 * M_PI * stop_freq;
-        float B = 2 * M_PI * width;
-        float zeta1 = sqrt((1 - sqrt((B * B) / (wc * wc) + 1)) / (4 * depth * depth - 2));
-        float zeta2 = depth * zeta1;
+        double wd = tanf(M_PI * stop_freq / (sampling_freq));
+        double wd2 = wd * wd;
+        double wc = 2 * M_PI * stop_freq;
+        double B = 2 * M_PI * width;
+        double zeta1 = sqrt((1 - sqrt((B * B) / (wc * wc) + 1)) / (4 * depth * depth - 2));
+        double zeta2 = depth * zeta1;
 
-        float temp = wd2 + 2 * zeta1 * wd + 1.f;
+        double temp = wd2 + 2 * zeta1 * wd + 1.f;
         a[0] = 1;
         a[1] = (2 * wd * wd - 2) / temp;
         a[2] = (1 - 2 * zeta1 * wd + wd2) / temp;

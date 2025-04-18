@@ -11,9 +11,9 @@
 					        How to use this library 
   ==============================================================================
     @note
-			- DiffCalculator::calc(float input)，通过SRML_Timer计算时间差dt进行微分
+			- DiffCalculator::calc(double input)，通过SRML_Timer计算时间差dt进行微分
 
-            - DiffCalculator::calc(float input, float _dt)，使用参数dt进行微分
+            - DiffCalculator::calc(double input, double _dt)，使用参数dt进行微分
   	@warning 
 			- 构造函数输入参数必须符合滤波器的构造函数参数，不然就会编译报错
 			- Standard C++11 required! 
@@ -47,11 +47,11 @@ public:
     template <typename... Args>
     DiffCalculator(Args... args) : filter(args...) {}
 
-    float get_diff() const { return diff; }
+    double get_diff() const { return diff; }
 
-    float calc(float input, float _dt)
+    double calc(double input, double _dt)
     {
-        float origin_diff;
+        double origin_diff;
 
         origin_diff = (input - last_data) / _dt; // 差分原始数据
         last_data = input;                       // 更新上次数据
@@ -62,12 +62,12 @@ public:
 
 protected:
     Diff_Filter_Type filter;
-    float get_filter_result(float data)
+    double get_filter_result(double data)
     {
         return filter.f(data);
     }
-    float last_data = 0;
-    float diff;
+    double last_data = 0;
+    double diff;
 };
 #endif  /* __cplusplus */
 

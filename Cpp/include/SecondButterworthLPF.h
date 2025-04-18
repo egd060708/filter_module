@@ -12,7 +12,7 @@
   ==============================================================================
     @note
             - 构造函数输入：截止频率，采样频率，阻尼比
-            - 使用LPF_SecondOrder_Classdef::f(float input)进行滤波
+            - 使用LPF_SecondOrder_Classdef::f(double input)进行滤波
     @warning
 
   ******************************************************************************
@@ -29,7 +29,7 @@
   */
 #ifndef _SECOND_ORDER_FILTER_H
 #define _SECOND_ORDER_FILTER_H
-#include "filters.h"
+#include "my_filters.h"
 
 #ifdef __cplusplus
 
@@ -62,7 +62,7 @@ class BSF_SecondOrder_Classdef;
 class LPF_SecondOrder_Classdef : public SRML_Filter::filter_base<2>
 {
 public:
-    LPF_SecondOrder_Classdef(float cutoff_freq, float sampling_freq, float _zeta = sqrtf(2) / 2)
+    LPF_SecondOrder_Classdef(double cutoff_freq, double sampling_freq, double _zeta = sqrtf(2) / 2)
     {
         calculateCoefficients(cutoff_freq, sampling_freq, _zeta);
     }
@@ -74,7 +74,7 @@ public:
      * @param sampling_freq 采样频率/Hz
      * @param _zeta 阻尼比
      */
-    void calculateCoefficients(float cutoff_freq, float sampling_freq, float _zeta = sqrtf(2) / 2)
+    void calculateCoefficients(double cutoff_freq, double sampling_freq, double _zeta = sqrtf(2) / 2)
     {
         SRML_Filter::cal2ndOrderLPFCoeffs(cutoff_freq, sampling_freq, _zeta, a, b);
     }
@@ -83,7 +83,7 @@ public:
 class HPF_SecondOrder_Classdef : public SRML_Filter::filter_base<2>
 {
 public:
-    HPF_SecondOrder_Classdef(float cutoff_freq, float sampling_freq, float _zeta = sqrtf(2) / 2)
+    HPF_SecondOrder_Classdef(double cutoff_freq, double sampling_freq, double _zeta = sqrtf(2) / 2)
     {
         calculateCoefficients(cutoff_freq, sampling_freq, _zeta);
     }
@@ -95,7 +95,7 @@ public:
      * @param sampling_freq 采样频率/Hz
      * @param _zeta 阻尼比
      */
-    void calculateCoefficients(float cutoff_freq, float sampling_freq, float _zeta = sqrtf(2) / 2)
+    void calculateCoefficients(double cutoff_freq, double sampling_freq, double _zeta = sqrtf(2) / 2)
     {
         SRML_Filter::cal2ndOrderHPFCoeffs(cutoff_freq, sampling_freq, _zeta, a, b);
     }
@@ -104,7 +104,7 @@ public:
 class BSF_SecondOrder_Classdef : public SRML_Filter::filter_base<2>
 {
 public:
-    BSF_SecondOrder_Classdef(float stop_freq, float sampling_freq, float depth, float width)
+    BSF_SecondOrder_Classdef(double stop_freq, double sampling_freq, double depth, double width)
     {
         calculateCoefficients(stop_freq, sampling_freq, depth, width);
     }
@@ -117,7 +117,7 @@ public:
      * @param depth 陷波深度，不应超过0.7
      * @param width 陷波宽度
      */
-    void calculateCoefficients(float stop_freq, float sampling_freq, float depth, float width)
+    void calculateCoefficients(double stop_freq, double sampling_freq, double depth, double width)
     {
         SRML_Filter::cal2ndOrderBSFCoeffs(stop_freq, sampling_freq, depth, width, a, b);
     }
@@ -126,7 +126,7 @@ public:
 class LPF_ThirdOrder_Classdef : public SRML_Filter::filter_base<3>
 {
 public:
-    LPF_ThirdOrder_Classdef(float cutoff_freq, float sampling_freq, float _zeta = sqrtf(2) / 2)
+    LPF_ThirdOrder_Classdef(double cutoff_freq, double sampling_freq, double _zeta = sqrtf(2) / 2)
     {
         calculateCoefficients(cutoff_freq, sampling_freq, _zeta);
     }
@@ -138,7 +138,7 @@ public:
      * @param sampling_freq 采样频率/Hz
      * @param _zeta 阻尼比
      */
-    void calculateCoefficients(float cutoff_freq, float sampling_freq, float _zeta = sqrtf(2) / 2)
+    void calculateCoefficients(double cutoff_freq, double sampling_freq, double _zeta = sqrtf(2) / 2)
     {
         SRML_Filter::cal3rdOrderLPFCoeffs(cutoff_freq, sampling_freq, _zeta, a, b);
     }

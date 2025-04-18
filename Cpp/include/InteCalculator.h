@@ -15,9 +15,9 @@ public:
     template <typename... Args>
     InteCalculator(Args... args) : filter(args...) {}
 
-    float get_inte() const { return inte; }
+    double get_inte() const { return inte; }
 
-    float calc(float input, float _dt)
+    double calc(double input, double _dt)
     {
         origin_inte = input * _dt; // 积分原始数据
 
@@ -33,12 +33,12 @@ public:
 
 protected:
     Inte_Filter_Type filter;
-    float get_filter_result(float data)
+    double get_filter_result(double data)
     {
         return filter.f(data);
     }
-    float origin_inte = 0;
-    float inte;
+    double origin_inte = 0;
+    double inte;
 };
 #endif  /* __cplusplus */
 

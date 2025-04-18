@@ -42,34 +42,34 @@
 
  /* Includes ------------------------------------------------------------------*/
 
-#include "filters.h"
+#include "../include/my_filters.h"
 
 /* Function prototypes -------------------------------------------------------*/
 /* LowPassFilter */
-void LowPassFilter::in(float num)							
+void LowPassFilter::in(double num)							
 {
 	now_num = num;
 }
 
-float LowPassFilter::out()							
+double LowPassFilter::out()							
 {
-  float out = now_num * Trust + last_out * (1 - Trust);
+  double out = now_num * Trust + last_out * (1 - Trust);
   last_out = out;
 	return out;
 }
 
 
-void LowPassFilter::operator <<(const float& num)			
+void LowPassFilter::operator <<(const double& num)			
 {
 	in(num);
 }
 
-void LowPassFilter::operator >>(float& num)
+void LowPassFilter::operator >>(double& num)
 {
 	num = out();
 }
 
-float LowPassFilter::f(float num)						
+double LowPassFilter::f(double num)						
 {
 	in(num);
 	return (out());
